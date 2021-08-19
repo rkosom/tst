@@ -11,17 +11,20 @@ pool:
   demands: powershell
 
 steps:
-- task: WaelHamze.xrm-ci-framework-build-tasks.MSCRMToolInstaller.MSCRMToolInstaller@12
-  displayName: 'Power DevOps Tool Installer'
-
-- task: WaelHamze.xrm-ci-framework-build-tasks.MSCRMExportSolution.MSCRMExportSolution@12
-  displayName: 'Export Solution: REW'
+- task: MSCRMToolInstaller@12
+  inputs:
+    nugetFeed: 'official'
+    psFeed: 'official'
+- task: MSCRMExportSolution@12
   inputs:
     crmConnectionString: 'AuthType=OAuth;Username=testraj@rajtextop.onmicrosoft.com; Password=Driku@2019;Url=https://org7ff909af.crm8.dynamics.com'
-    solutionName: REW
-    outputPath: Dynamic365Solutions
+    solutionName: 'Dynamic365Sol'
+    exportManaged: false
+    exportUnmanaged: true
+    outputPath: '$(build.binariesdirectory)'
 
 - task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: drop'
   inputs:
-    PathtoPublish: Dynamic365Solutions
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
