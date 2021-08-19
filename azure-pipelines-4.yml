@@ -1,0 +1,27 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  name: Azure Pipelines
+  demands: powershell
+
+steps:
+- task: WaelHamze.xrm-ci-framework-build-tasks.MSCRMToolInstaller.MSCRMToolInstaller@12
+  displayName: 'Power DevOps Tool Installer'
+
+- task: WaelHamze.xrm-ci-framework-build-tasks.MSCRMExportSolution.MSCRMExportSolution@12
+  displayName: 'Export Solution: REW'
+  inputs:
+    crmConnectionString: 'AuthType=OAuth;Username=testraj@rajtextop.onmicrosoft.com; Password=Driku@2019;Url=https://org7ff909af.crm8.dynamics.com'
+    solutionName: REW
+    outputPath: Dynamic365Solutions
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    PathtoPublish: Dynamic365Solutions
